@@ -6,6 +6,8 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -58,6 +60,9 @@ public class OrderHeader extends BaseEntity {
     @Embedded
     private Address billingAddress;
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {return true;}
@@ -68,7 +73,8 @@ public class OrderHeader extends BaseEntity {
 
         if (!Objects.equals(customer, o1.customer)) {return false;}
         if (!Objects.equals(shippingAddress, o1.shippingAddress)) {return false;}
-        return Objects.equals(billingAddress, o1.billingAddress);
+        if (!Objects.equals(billingAddress, o1.billingAddress)) {return false;}
+        return orderStatus == o1.orderStatus;
     }
 
     @Override
@@ -77,6 +83,7 @@ public class OrderHeader extends BaseEntity {
         result = 31 * result + (customer != null ? customer.hashCode() : 0);
         result = 31 * result + (shippingAddress != null ? shippingAddress.hashCode() : 0);
         result = 31 * result + (billingAddress != null ? billingAddress.hashCode() : 0);
+        result = 31 * result + (orderStatus != null ? orderStatus.hashCode() : 0);
         return result;
     }
 }
