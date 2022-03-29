@@ -1,6 +1,10 @@
 package guru.springframework.orderservice.domain;
 
 import java.util.Objects;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,9 +14,49 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class OrderHeader extends BaseEntity{
+@AttributeOverrides({
+        @AttributeOverride(
+                name = "shippingAddress.address",
+                column = @Column(name = "shipping_address")
+        ),
+        @AttributeOverride(
+                name = "shippingAddress.city",
+                column = @Column(name = "shipping_city")
+        ),
+        @AttributeOverride(
+                name = "shippingAddress.state",
+                column = @Column(name = "shipping_state")
+        ),
+        @AttributeOverride(
+                name = "shippingAddress.zipCode",
+                column = @Column(name = "shipping_zip_code")
+        ),
+        @AttributeOverride(
+                name = "billingAddress.address",
+                column = @Column(name = "bill_to_address")
+        ),
+        @AttributeOverride(
+                name = "billingAddress.city",
+                column = @Column(name = "bill_to_city")
+        ),
+        @AttributeOverride(
+                name = "billingAddress.state",
+                column = @Column(name = "bill_to_state")
+        ),
+        @AttributeOverride(
+                name = "billingAddress.zipCode",
+                column = @Column(name = "bill_to_zip_code")
+        ),
+})
+public class OrderHeader extends BaseEntity {
 
     private String customer;
+
+    @Embedded
+    private Address shippingAddress;
+
+    @Embedded
+    private Address billingAddress;
 
     @Override
     public boolean equals(Object o) {
@@ -22,13 +66,17 @@ public class OrderHeader extends BaseEntity{
 
         OrderHeader o1 = (OrderHeader) o;
 
-        return Objects.equals(customer, o1.customer);
+        if (!Objects.equals(customer, o1.customer)) {return false;}
+        if (!Objects.equals(shippingAddress, o1.shippingAddress)) {return false;}
+        return Objects.equals(billingAddress, o1.billingAddress);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (customer != null ? customer.hashCode() : 0);
+        result = 31 * result + (shippingAddress != null ? shippingAddress.hashCode() : 0);
+        result = 31 * result + (billingAddress != null ? billingAddress.hashCode() : 0);
         return result;
     }
 }
