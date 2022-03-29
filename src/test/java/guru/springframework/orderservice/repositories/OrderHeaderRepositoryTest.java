@@ -25,10 +25,12 @@ class OrderHeaderRepositoryTest {
 
         assertNotNull(savedOrder);
         assertNotNull(savedOrder.getId());
+        assertNotNull(savedOrder.getCreatedDate());
 
         OrderHeader fetchedOrder = orderHeaderRepository.getById(savedOrder.getId());
 
         assertNotNull(fetchedOrder);
         assertNotNull(fetchedOrder.getId());
+        assertNotNull(fetchedOrder.getCreatedDate());
     }
 }
