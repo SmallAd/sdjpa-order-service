@@ -1,6 +1,5 @@
 package guru.springframework.orderservice.domain;
 
-import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import lombok.Getter;
@@ -26,15 +25,16 @@ public class OrderLine extends BaseEntity {
 
         OrderLine orderLine = (OrderLine) o;
 
-        if (!Objects.equals(quantityOrdered, orderLine.quantityOrdered)) {return false;}
-        return Objects.equals(orderHeader, orderLine.orderHeader);
+        if (quantityOrdered != null ? !quantityOrdered.equals(orderLine.quantityOrdered) : orderLine.quantityOrdered != null) {
+            return false;
+        }
+        return orderHeader != null ? orderHeader.equals(orderLine.orderHeader) : orderLine.orderHeader == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (quantityOrdered != null ? quantityOrdered.hashCode() : 0);
-        result = 31 * result + (orderHeader != null ? orderHeader.hashCode() : 0);
         return result;
     }
 }
