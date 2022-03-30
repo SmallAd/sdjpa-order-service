@@ -1,6 +1,8 @@
 package guru.springframework.orderservice.domain;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -69,6 +71,15 @@ public class OrderHeader extends BaseEntity {
     @OneToMany(mappedBy = "orderHeader", cascade = CascadeType.PERSIST)
     @ToString.Exclude
     private Set<OrderLine> orderLines;
+
+    public void addOrderLine(OrderLine orderLine) {
+        if (Objects.isNull(orderLines)) {
+            orderLines = new HashSet<>();
+        }
+
+        orderLines.add(orderLine);
+        orderLine.setOrderHeader(this);
+    }
 
     @Override
     public boolean equals(Object o) {
