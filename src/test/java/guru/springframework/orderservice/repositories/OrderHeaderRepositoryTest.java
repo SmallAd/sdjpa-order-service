@@ -2,7 +2,10 @@ package guru.springframework.orderservice.repositories;
 
 import guru.springframework.orderservice.domain.OrderHeader;
 import guru.springframework.orderservice.domain.OrderLine;
+import guru.springframework.orderservice.domain.Product;
+import guru.springframework.orderservice.domain.ProductStatus;
 import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -19,6 +22,20 @@ class OrderHeaderRepositoryTest {
 
     @Autowired
     private OrderHeaderRepository orderHeaderRepository;
+    
+    @Autowired
+    private ProductRepository productRepository;
+
+    private Product product;
+
+    @BeforeEach
+    void setUp() {
+        Product newProduct = new Product();
+        newProduct.setProductStatus(ProductStatus.NEW);
+        newProduct.setDescription("test product");
+
+        product = productRepository.saveAndFlush(newProduct);
+    }
 
     @Test
     void testSaveOrderWithLine() {
@@ -30,6 +47,7 @@ class OrderHeaderRepositoryTest {
 
         orderHeader.setOrderLines(Set.of(orderLine));
         orderLine.setOrderHeader(orderHeader);
+        orderLine.setProduct(product);
 
         OrderHeader savedOrder = orderHeaderRepository.save(orderHeader);
         orderHeaderRepository.flush();
